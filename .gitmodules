@@ -1,0 +1,27 @@
+[submodule "submodules/adv_dbg_if"]
+	path = submodules/adv_dbg_if
+	url = https://github.com/roalogic/adv_dbg_if.git
+[submodule "submodules/memory"]
+	path = submodules/memory
+	url = https://github.com/roalogic/memory.git
+[submodule "submodules/ahb3lite_pkg"]
+	path = submodules/ahb3lite_pkg
+	url = https://github.com/roalogic/ahb3lite_pkg.git
+[submodule "submodules/ahb3lite_apb_bridge"]
+	path = submodules/ahb3lite_apb_bridge
+	url = https://github.com/roalogic/ahb3lite_apb_bridge.git
+[submodule "submodules/ahb3lite_interconnect"]
+	path = submodules/ahb3lite_interconnect
+	url = https://github.com/roalogic/ahb3lite_interconnect.git
+[submodule "submodules/ahb3lite_memory"]
+	path = submodules/ahb3lite_memory
+	url = https://github.com/roalogic/ahb3lite_memory.git
+[submodule "submodules/apb4_gpio"]
+	path = submodules/apb4_gpio
+	url = https://github.com/roalogic/apb4_gpio.git
+[submodule "submodules/apb4_mux"]
+	path = submodules/apb4_mux
+	url = https://github.com/roalogic/apb4_mux.git
+[submodule "submodules/rv12"]
+	path = submodules/rv12
+	url = https://github.com/roalogic/rv12.git
