@@ -1,0 +1,254 @@
+#####################################################################
+##   ,------.                    ,--.                ,--.          ##
+##   |  .--. ' ,---.  ,--,--.    |  |    ,---. ,---. `--' ,---.    ##
+##   |  '--'.'| .-. |' ,-.  |    |  |   | .-. | .-. |,--.| .--'    ##
+##   |  |\  \ ' '-' '\ '-'  |    |  '--.' '-' ' '-' ||  |\ `--.    ##
+##   `--' '--' `---'  `--`--'    `-----' `---' `-   /`--' `---'    ##
+##                                             `---'               ##
+##   Roa Logic RV-SoC                                              ##
+##   Simulator Include File                                        ##
+##                                                                 ##
+#####################################################################
+##                                                                 ##
+##             Copyright (C) 2016-2022 ROA Logic BV                ##
+##             www.roalogic.com                                    ##
+##                                                                 ##
+##   This source file may be used and distributed without          ##
+##   restriction provided that this copyright statement is not     ##
+##   removed from the file and that any derivative work contains   ##
+##   the original copyright notice and the associated disclaimer.  ##
+##                                                                 ##
+##      THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY        ##
+##   EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED     ##
+##   TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     ##
+##   FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL THE AUTHOR OR     ##
+##   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  ##
+##   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ##
+##   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  ##
+##   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)      ##
+##   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN     ##
+##   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  ##
+##   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS          ##
+##   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ##
+##                                                                 ##
+#####################################################################
+
+#####################################################################
+# Implementation details
+#####################################################################
+TARGET     =
+busif      = ahb3lite
+
+#User VPI or file based JTAG model or OPENOCD VPI (OPENOCD)
+#JTAG_DBG = OPENOCD
+#JTAG_DBG = VPI
+JTAG_DBG = NONE
+
+
+#####################################################################
+# OVL checker
+# This can be changed on the command line
+#####################################################################
+OVL_ASSERT   = OFF
+OVL_INIT_MSG = ON
+STD_OVL_DIR  = /projects/OVL/std_ovl
+
+
+#####################################################################
+# Design constants
+#####################################################################
+INCDIRS:=
+DEFINES:=SIM
+#DEFINES+=USE_SDRAM_CONTROLLER
+#DEFINES+=RV_NO_X_ON_LOAD
+
+ifneq (,$(findstring USE_SDRAM_CONTROLLER, $(DEFINES)))
+  #Verilog Format
+  HEX_SUFFIX:=hex.ver
+else
+  #Intel HEX Format
+  HEX_SUFFIX:=hex
+endif
+
+
+#####################################################################
+# Design Sources
+#####################################################################
+SUBMODULES_DIR= $(ROOT_DIR)/submodules
+RVL_SRC_DIR   = $(SUBMODULES_DIR)/rvl/rtl/verilog
+MEM_SRC_DIR   = $(SUBMODULES_DIR)/memory/rtl/verilog
+JTAG_SRC_DIR  = $(SUBMODULES_DIR)/universal_jtag_tap/rtl/verilog
+DBG_SRC_DIR   = $(SUBMODULES_DIR)/adv_dbg_if/verilog
+SYS_SRC_DIR   = $(ROOT_DIR)/rtl/verilog/$(busif)
+LATTICE_DIR   = $(ROOT_DIR)/rtl/verilog/$(busif)/lattice
+
+DUT_SRC_DIR=$(ROOT_DIR)/rtl/verilog
+RTL_TOP   = 
+
+RTL_VLOG  = $(SUBMODULES_DIR)/$(busif)_pkg/rtl/verilog/$(busif)_pkg.sv
+
+RTL_VLOG += $(RVL_SRC_DIR)/pkg/riscv_rvl_pkg.sv								\
+	    $(RVL_SRC_DIR)/pkg/riscv_opcodes_pkg.sv							\
+	    $(RVL_SRC_DIR)/pkg/riscv_state1.10_pkg.sv							\
+	    $(RVL_SRC_DIR)/pkg/riscv_pma_pkg.sv								\
+	    $(RVL_SRC_DIR)/pkg/riscv_du_pkg.sv								\
+	    $(RVL_SRC_DIR)/pkg/biu_constants_pkg.sv							\
+	    $(RVL_SRC_DIR)/core/riscv_parcel_queue.sv							\
+	    $(RVL_SRC_DIR)/core/riscv_if.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_pd.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_id.sv								\
+	    $(RVL_SRC_DIR)/core/ex/riscv_alu.sv								\
+	    $(RVL_SRC_DIR)/core/ex/riscv_bu.sv								\
+	    $(RVL_SRC_DIR)/core/ex/riscv_lsu.sv								\
+	    $(RVL_SRC_DIR)/core/ex/riscv_mul.sv								\
+	    $(RVL_SRC_DIR)/core/ex/riscv_div.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_ex.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_mem.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_wb.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_dwb.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_rf.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_state1.10.sv							\
+	    $(RVL_SRC_DIR)/core/riscv_bp.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_du.sv								\
+	    $(RVL_SRC_DIR)/core/riscv_core.sv								\
+	    $(MEM_SRC_DIR)/rl_ram_1r1w.sv								\
+	    $(MEM_SRC_DIR)/rl_ram_1r1w_generic.sv							\
+	    $(MEM_SRC_DIR)/rl_ram_1rw.sv								\
+	    $(MEM_SRC_DIR)/rl_ram_1rw_generic.sv							\
+	    $(MEM_SRC_DIR)/rl_queue.sv									\
+	    $(RVL_SRC_DIR)/pkg/riscv_cache_pkg.sv							\
+	    $(RVL_SRC_DIR)/core/cache/riscv_cache_setup.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_cache_tag.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_cache_hit.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_cache_memory.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_cache_biu_ctrl.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_icache_core.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_noicache_core.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_dcache_hit.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_dcache_core.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_nodcache_core.sv						\
+	    $(RVL_SRC_DIR)/core/cache/riscv_cache_biu_ctrl.sv						\
+	    $(RVL_SRC_DIR)/core/memory/riscv_memmisaligned.sv						\
+	    $(RVL_SRC_DIR)/core/memory/riscv_membuf.sv							\
+	    $(RVL_SRC_DIR)/core/memory/riscv_pmachk.sv							\
+	    $(RVL_SRC_DIR)/core/memory/riscv_pmpchk.sv							\
+	    $(RVL_SRC_DIR)/core/memory/riscv_imem_ctrl.sv						\
+	    $(RVL_SRC_DIR)/core/memory/riscv_dmem_ctrl.sv						\
+	    $(RVL_SRC_DIR)/core/mmu/riscv_nommu.sv							\
+	    $(SUBMODULES_DIR)/$(busif)_pkg/rtl/verilog/$(busif)_pkg.sv					\
+	    $(RVL_SRC_DIR)/$(busif)/biu_$(busif).sv							\
+	    $(RVL_SRC_DIR)/$(busif)/riscv_top_$(busif).sv	
+
+RTL_VLOG += $(JTAG_SRC_DIR)/altera_virtual_tap.sv							\
+	    $(JTAG_SRC_DIR)/roalogic_tap.sv								\
+	    $(JTAG_SRC_DIR)/universal_jtag_tap.sv							\
+
+RTL_VLOG += $(DBG_SRC_DIR)/core/syncreg.v								\
+	    $(DBG_SRC_DIR)/core/syncflop.v								\
+	    $(DBG_SRC_DIR)/core/bytefifo.v								\
+	    $(DBG_SRC_DIR)/core/adbg_pkg.sv								\
+	    $(DBG_SRC_DIR)/core/adbg_or1k_status_reg.sv							\
+	    $(DBG_SRC_DIR)/core/adbg_or1k_pkg.sv							\
+	    $(DBG_SRC_DIR)/core/adbg_or1k_module.sv							\
+	    $(DBG_SRC_DIR)/core/adbg_or1k_biu.sv							\
+	    $(DBG_SRC_DIR)/core/adbg_jsp_pkg.sv								\
+	    $(DBG_SRC_DIR)/core/adbg_jsp_module_core.sv							\
+	    $(DBG_SRC_DIR)/core/adbg_crc32.v								\
+	    $(DBG_SRC_DIR)/core/adbg_bus_module_core.sv							\
+	    $(DBG_SRC_DIR)/ahb3/adbg_ahb3_pkg.sv							\
+	    $(DBG_SRC_DIR)/ahb3/adbg_top_ahb3.sv							\
+	    $(DBG_SRC_DIR)/ahb3/adbg_jsp_apb_module.sv							\
+	    $(DBG_SRC_DIR)/ahb3/adbg_jsp_apb_biu.sv							\
+	    $(DBG_SRC_DIR)/ahb3/adbg_ahb3_module.sv							\
+	    $(DBG_SRC_DIR)/ahb3/adbg_ahb3_biu.sv
+
+RTL_VLOG += $(SUBMODULES_DIR)/ahb3lite_interconnect/rtl/verilog/ahb3lite_interconnect_slave_priority.sv	\
+	    $(SUBMODULES_DIR)/ahb3lite_interconnect/rtl/verilog/ahb3lite_interconnect_slave_port.sv	\
+	    $(SUBMODULES_DIR)/ahb3lite_interconnect/rtl/verilog/ahb3lite_interconnect_master_port.sv	\
+	    $(SUBMODULES_DIR)/ahb3lite_interconnect/rtl/verilog/ahb3lite_interconnect.sv		\
+	    $(SUBMODULES_DIR)/plic/rtl/verilog/core/plic_dynamic_registers.sv				\
+	    $(SUBMODULES_DIR)/plic/rtl/verilog/core/plic_priority_index.sv				\
+	    $(SUBMODULES_DIR)/plic/rtl/verilog/core/plic_cell.sv					\
+	    $(SUBMODULES_DIR)/plic/rtl/verilog/core/plic_target.sv					\
+	    $(SUBMODULES_DIR)/plic/rtl/verilog/core/plic_gateway.sv					\
+	    $(SUBMODULES_DIR)/plic/rtl/verilog/core/plic_core.sv					\
+	    $(SUBMODULES_DIR)/plic/rtl/verilog/apb4/apb4_plic_top.sv					\
+	    $(SUBMODULES_DIR)/ahb3lite_timer/rtl/verilog/ahb3lite_timer.sv				\
+	    $(SUBMODULES_DIR)/ahb3lite_apb_bridge/rtl/verilog/ahb3lite_apb_bridge.sv			\
+	    $(SUBMODULES_DIR)/apb4_mux/rtl/verilog/apb_mux.sv						\
+	    $(SUBMODULES_DIR)/ahb3lite_memory/rtl/verilog/ahb3lite_sram1rw.sv				\
+	    $(SUBMODULES_DIR)/apb4_gpio/rtl/verilog/apb_gpio.sv						\
+	    $(SUBMODULES_DIR)/ahb3lite_error/rtl/verilog/ahb3lite_error.sv				\
+	    $(SUBMODULES_DIR)/apb_error/rtl/verilog/apb_error.sv
+
+
+RTL_VLOG += $(SYS_SRC_DIR)/common/riscv_system_top_ahb3lite.sv						\
+	    $(SYS_SRC_DIR)/pads.v									\
+            $(SYS_SRC_DIR)/common/rv_soc_apb_8b_slaves.sv						\
+	    $(SYS_SRC_DIR)/common/rv_soc_apb_32b_slaves.sv						\
+            $(SYS_SRC_DIR)/common/rv_soc_top.sv								\
+	    												\
+	    $(LATTICE_DIR)/ip/uart0/1.1.1/rtl/uart0_rl.v						\
+	    $(LATTICE_DIR)/ip/clkdiv/clkdiv.v								\
+	    $(LATTICE_DIR)/ip/dp_ram/dp_ram.v								\
+	    $(LATTICE_DIR)/ip/flash_ctrl/spi_flash_intf.v						\
+	    $(LATTICE_DIR)/ip/flash_ctrl/apb_intf.v							\
+	    $(LATTICE_DIR)/ip/flash_ctrl/ahb_intf.v							\
+	    $(LATTICE_DIR)/ip/flash_ctrl/lscc_spi_flash.v						\
+	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/sdr_sig.v			\
+	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/sdr_fifo_intf.v		\
+	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/sdr_data.v			\
+	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/sdr_ctrl.v			\
+	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/wb_fifo_intf.v		\
+	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/wb_sdr_ctrl.v		\
+	    $(LATTICE_DIR)/ip/sph_sdram_controller/ahb2wb_sdr_ctrl/rtl/verilog/ahb2wb_sdr_ctrl.sv	\
+	    $(LATTICE_DIR)/ip/sph_sdram_controller/ip/pll_danfoss.v					\
+	    $(LATTICE_DIR)/ip/sph_sdram_controller/danfoss/ahb_sdr_ctl_top_rl.sv			\
+            $(LATTICE_DIR)/ecp5versa_top.sv
+
+RTL_VHDL =
+
+#####################################################################
+# GateLevel Sources
+#####################################################################
+IMPL_DIR = $(ROOT_DIR)/syn/lattice/impl1
+
+GATE_VLOG = $(IMPL_DIR)/rvl_soc_ecp5_impl1_vo.vo
+GATE_SDF  = $(IMPL_DIR)/rvl_soc_ecp5_impl1_vo.sdf
+
+
+#####################################################################
+# Testbench Sources
+#####################################################################
+TB_PREREQ=
+TB_TOP=rvl_soc_tb
+TB_SRC_DIR=$(ROOT_DIR)/bench/verilog/$(busif)
+TB_VLOG=$(TB_SRC_DIR)/rvl_soc_tb.sv						\
+	$(TB_SRC_DIR)/ecp5versa_tb.sv						\
+	$(TB_SRC_DIR)/uart_sim.sv						\
+	$(TB_SRC_DIR)/freertos_task_mon.sv					\
+	$(TB_SRC_DIR)/models/IS42VM32200M_Rev0_2.v				\
+	$(TB_SRC_DIR)/check_cpu2ahb.sv						\
+	$(TB_SRC_DIR)/check_ahb2apb.sv						\
+	$(SUBMODULES_DIR)/rvl/bench/verilog/ahb3lite/memory_model_ahb3lite.sv
+TB_VHDL=
+
+
+#####################################################################
+# Technology Libraries
+#####################################################################
+LIBEXT = .v
+
+ifeq ($(JTAG_DBG), VPI)
+  TB_PLI = ../$(TB_SRC_DIR)/jtag_pli/jp-io-vpi.sl
+  TB_VLOG += $(TB_SRC_DIR)/jtag_pli/dbg_comm_vpi.v
+else ifeq ($(JTAG_DBG), OPENOCD)
+  TB_PLI = ../$(TB_SRC_DIR)/jtag_openocd/jtag_vpi.sl
+  TB_VLOG += $(TB_SRC_DIR)/jtag_openocd/jtag_vpi.v
+else ifeq ($(JTAG_DBG), COMM)
+  TB_VLOG += $(TB_SRC_DIR)/jtag_pli/dbg_comm.v
+endif
+
+
+#Lattice models (fifos etc)
+TECHLIBS = $(shell which vsim | sed -r 's/(.*diamond\/[0-9\.]+).*/\1\/cae_library\/simulation\/verilog\/pmi/')

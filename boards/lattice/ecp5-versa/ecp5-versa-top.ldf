@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BaliProject version="3.2" title="rvl_soc_ecp5" device="LFE5UM-45F-6BG381C" default_implementation="impl1">
+    <Options/>
+    <Implementation title="impl1" dir="impl1" description="impl1" synthesis="synplify" default_strategy="Strategy1">
+        <Options def_top="dp_ram" top="ecp5versa_top"/>
+        <Source name="../../submodules/rvl/rtl/verilog/pkg/riscv_rvl_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/pkg/riscv_state1.10_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/pkg/riscv_opcodes_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/pkg/biu_constants_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/ahb3lite_pkg/rtl/verilog/ahb3lite_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/pkg/riscv_du_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/pkg/riscv_pma_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_parcel_queue.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_if.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_id.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_bp.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_pd.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/ex/riscv_alu.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/ex/riscv_bu.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/ex/riscv_div.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/ex/riscv_lsu.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/ex/riscv_mul.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_ex.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_mem.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_wb.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_dwb.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_du.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_rf.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_state1.10.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/riscv_core.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/memory/riscv_memmisaligned.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/memory/riscv_pmachk.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/memory/riscv_pmpchk.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/memory/riscv_imem_ctrl.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/memory/riscv_dmem_ctrl.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/memory/rtl/verilog/rl_queue.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/memory/riscv_membuf.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/mmu/riscv_nommu.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/pkg/riscv_cache_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_cache_setup.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_cache_tag.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_cache_hit.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_dcache_hit.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_cache_memory.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_cache_biu_ctrl.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_icache_core.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_dcache_core.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_noicache_core.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/core/cache/riscv_nodcache_core.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/ahb3lite/biu_ahb3lite.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/rvl/rtl/verilog/ahb3lite/riscv_top_ahb3lite.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/universal_jtag_tap/rtl/verilog/roalogic_tap.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/universal_jtag_tap/rtl/verilog/universal_jtag_tap.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/adbg_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/ahb3/adbg_ahb3_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/ahb3/adbg_ahb3_biu.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/ahb3/adbg_ahb3_module.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/adbg_jsp_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/ahb3/adbg_jsp_apb_biu.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/ahb3/adbg_jsp_apb_module.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/adbg_jsp_module_core.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/adbg_bus_module_core.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/adbg_crc32.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/adbg_or1k_pkg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/adbg_or1k_biu.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/adbg_or1k_module.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/adbg_or1k_status_reg.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/bytefifo.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/syncflop.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/core/syncreg.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../submodules/adv_dbg_if/verilog/ahb3/adbg_top_ahb3.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/common/riscv_system_top_ahb3lite.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/ahb3lite_interconnect/rtl/verilog/ahb3lite_interconnect_master_port.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/ahb3lite_interconnect/rtl/verilog/ahb3lite_interconnect_slave_port.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/ahb3lite_interconnect/rtl/verilog/ahb3lite_interconnect_slave_priority.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/ahb3lite_interconnect/rtl/verilog/ahb3lite_interconnect.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/memory/rtl/verilog/rl_ram_1r1w_lattice.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/memory/rtl/verilog/rl_ram_1r1w_generic.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/memory/rtl/verilog/rl_ram_1r1w.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/memory/rtl/verilog/rl_ram_1rw_generic.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/memory/rtl/verilog/rl_ram_1rw.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/ahb3lite_memory/rtl/verilog/ahb3lite_sram1rw.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/ahb3lite_timer/rtl/verilog/ahb3lite_timer.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/plic/rtl/verilog/apb4/apb4_plic_top.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/plic/rtl/verilog/core/plic_core.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/plic/rtl/verilog/core/plic_dynamic_registers.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/plic/rtl/verilog/core/plic_gateway.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/plic/rtl/verilog/core/plic_target.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/plic/rtl/verilog/core/plic_cell.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/plic/rtl/verilog/core/plic_priority_index.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/ahb3lite_apb_bridge/rtl/verilog/ahb3lite_apb_bridge.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/apb4_mux/rtl/verilog/apb_mux.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/apb4_gpio/rtl/verilog/apb_gpio.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../submodules/ahb3lite_error/rtl/verilog/ahb3lite_error.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/lattice/ecp5versa_top.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog" top_module="ecp5versa_top"/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/pads.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/common/rv_soc_apb_32b_slaves.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/common/rv_soc_apb_8b_slaves.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/common/rv_soc_top.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/lattice/ip/dp_ram/dp_ram.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/lattice/ip/clkdiv/clkdiv.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/lattice/ip/uart0/1.1.1/rtl/uart0_rl.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/lattice/ip/flash_ctrl/spi_flash_intf.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/lattice/ip/flash_ctrl/lscc_spi_flash.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/lattice/ip/flash_ctrl/apb_intf.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../rtl/verilog/ahb3lite/lattice/ip/flash_ctrl/ahb_intf.v" type="Verilog" type_short="Verilog">
+            <Options/>
+        </Source>
+        <Source name="../../submodules/apb_error/rtl/verilog/apb_error.sv" type="Verilog" type_short="Verilog">
+            <Options VerilogStandard="System Verilog"/>
+        </Source>
+        <Source name="ecp5_tb/ecp5_tb.spf" type="Simulation Project File" type_short="SPF">
+            <Options/>
+        </Source>
+        <Source name="ecp5_versa_devbrd.lpf" type="Logic Preference" type_short="LPF">
+            <Options/>
+        </Source>
+        <Source name="impl1/impl1.xcf" type="Programming Project File" type_short="Programming">
+            <Options/>
+        </Source>
+        <Source name="rvl_soc_ecp5.sdc" type="Synplify Design Constraints File" type_short="SDC">
+            <Options/>
+        </Source>
+    </Implementation>
+    <Strategy name="Strategy1" file="rvl_soc_ecp51.sty"/>
+</BaliProject>
