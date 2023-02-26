@@ -35,7 +35,7 @@
 
 all: regression
 
-SIMULATORS = msim ncsim vcs riviera
+SIMULATORS = msim ncsim vcs riviera verilator
 LINTERS    = $(addsuffix _lint, $(SIMULATORS))
 SIMWAVES   = $(addsuffix _waves, $(SIMULATORS))
 SIMGATES   = $(addsuffix _gate, $(SIMULATORS))
