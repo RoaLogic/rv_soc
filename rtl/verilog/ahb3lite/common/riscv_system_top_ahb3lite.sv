@@ -27,10 +27,10 @@
 //                                                                 //
 /////////////////////////////////////////////////////////////////////
 
+module riscv_system_top_ahb3lite
 import ahb3lite_pkg::*;
 import riscv_pma_pkg::*;
-
-module riscv_system_top_ahb3lite #(
+#(
   parameter            TECHNOLOGY         = "Generic",
 
 
@@ -191,7 +191,8 @@ end
   //
 
   //TAP
-  logic            dbg_tlr,
+  logic            dbg_tck,
+                   dbg_tlr,
                    dbg_sel,
                    dbg_tdo,
                    dbg_tdi,
