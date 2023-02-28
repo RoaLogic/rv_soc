@@ -28,11 +28,11 @@
 /////////////////////////////////////////////////////////////////////
 
 
+module rv_soc_top
 import ahb3lite_pkg::*;
 import riscv_pma_pkg::*;
 import riscv_state_pkg::*;
-
-module rv_soc_top #(
+#(
   parameter [15:0] JTAG_USERIDCODE    = 16'h0,     //Upper 16bits of IDCODE
   parameter [31:0] JTAG_USERCODE      = 32'h0,     //UserCode
 
