@@ -75,69 +75,66 @@ endif
 # Design Sources
 #####################################################################
 SUBMODULES_DIR= $(ROOT_DIR)/submodules
-RVL_SRC_DIR   = $(SUBMODULES_DIR)/rvl/rtl/verilog
+RV_SRC_DIR    = $(SUBMODULES_DIR)/rv12/rtl/verilog
 MEM_SRC_DIR   = $(SUBMODULES_DIR)/memory/rtl/verilog
 JTAG_SRC_DIR  = $(SUBMODULES_DIR)/universal_jtag_tap/rtl/verilog
 DBG_SRC_DIR   = $(SUBMODULES_DIR)/adv_dbg_if/verilog
 SYS_SRC_DIR   = $(ROOT_DIR)/rtl/verilog/$(busif)
-LATTICE_DIR   = $(ROOT_DIR)/rtl/verilog/$(busif)/lattice
 
 DUT_SRC_DIR=$(ROOT_DIR)/rtl/verilog
-RTL_TOP   = 
+RTL_TOP   = rv_soc_top
 
 RTL_VLOG  = $(SUBMODULES_DIR)/$(busif)_pkg/rtl/verilog/$(busif)_pkg.sv
 
-RTL_VLOG += $(RVL_SRC_DIR)/pkg/riscv_rvl_pkg.sv								\
-	    $(RVL_SRC_DIR)/pkg/riscv_opcodes_pkg.sv							\
-	    $(RVL_SRC_DIR)/pkg/riscv_state1.10_pkg.sv							\
-	    $(RVL_SRC_DIR)/pkg/riscv_pma_pkg.sv								\
-	    $(RVL_SRC_DIR)/pkg/riscv_du_pkg.sv								\
-	    $(RVL_SRC_DIR)/pkg/biu_constants_pkg.sv							\
-	    $(RVL_SRC_DIR)/core/riscv_parcel_queue.sv							\
-	    $(RVL_SRC_DIR)/core/riscv_if.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_pd.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_id.sv								\
-	    $(RVL_SRC_DIR)/core/ex/riscv_alu.sv								\
-	    $(RVL_SRC_DIR)/core/ex/riscv_bu.sv								\
-	    $(RVL_SRC_DIR)/core/ex/riscv_lsu.sv								\
-	    $(RVL_SRC_DIR)/core/ex/riscv_mul.sv								\
-	    $(RVL_SRC_DIR)/core/ex/riscv_div.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_ex.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_mem.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_wb.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_dwb.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_rf.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_state1.10.sv							\
-	    $(RVL_SRC_DIR)/core/riscv_bp.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_du.sv								\
-	    $(RVL_SRC_DIR)/core/riscv_core.sv								\
+RTL_VLOG += $(RV_SRC_DIR)/pkg/riscv_rv12_pkg.sv								\
+	    $(RV_SRC_DIR)/pkg/riscv_opcodes_pkg.sv							\
+	    $(RV_SRC_DIR)/pkg/riscv_state1.10_pkg.sv							\
+	    $(RV_SRC_DIR)/pkg/riscv_pma_pkg.sv								\
+	    $(RV_SRC_DIR)/pkg/riscv_du_pkg.sv								\
+	    $(RV_SRC_DIR)/pkg/biu_constants_pkg.sv							\
+	    $(RV_SRC_DIR)/core/riscv_parcel_queue.sv							\
+	    $(RV_SRC_DIR)/core/riscv_if.sv								\
+	    $(RV_SRC_DIR)/core/riscv_pd.sv								\
+	    $(RV_SRC_DIR)/core/riscv_id.sv								\
+	    $(RV_SRC_DIR)/core/ex/riscv_alu.sv								\
+	    $(RV_SRC_DIR)/core/ex/riscv_bu.sv								\
+	    $(RV_SRC_DIR)/core/ex/riscv_lsu.sv								\
+	    $(RV_SRC_DIR)/core/ex/riscv_mul.sv								\
+	    $(RV_SRC_DIR)/core/ex/riscv_div.sv								\
+	    $(RV_SRC_DIR)/core/riscv_ex.sv								\
+	    $(RV_SRC_DIR)/core/riscv_mem.sv								\
+	    $(RV_SRC_DIR)/core/riscv_wb.sv								\
+	    $(RV_SRC_DIR)/core/riscv_dwb.sv								\
+	    $(RV_SRC_DIR)/core/riscv_rf.sv								\
+	    $(RV_SRC_DIR)/core/riscv_state1.10.sv							\
+	    $(RV_SRC_DIR)/core/riscv_bp.sv								\
+	    $(RV_SRC_DIR)/core/riscv_du.sv								\
+	    $(RV_SRC_DIR)/core/riscv_core.sv								\
 	    $(MEM_SRC_DIR)/rl_ram_1r1w.sv								\
 	    $(MEM_SRC_DIR)/rl_ram_1r1w_generic.sv							\
 	    $(MEM_SRC_DIR)/rl_ram_1rw.sv								\
 	    $(MEM_SRC_DIR)/rl_ram_1rw_generic.sv							\
 	    $(MEM_SRC_DIR)/rl_queue.sv									\
-	    $(RVL_SRC_DIR)/pkg/riscv_cache_pkg.sv							\
-	    $(RVL_SRC_DIR)/core/cache/riscv_cache_setup.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_cache_tag.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_cache_hit.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_cache_memory.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_cache_biu_ctrl.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_icache_core.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_noicache_core.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_dcache_hit.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_dcache_core.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_nodcache_core.sv						\
-	    $(RVL_SRC_DIR)/core/cache/riscv_cache_biu_ctrl.sv						\
-	    $(RVL_SRC_DIR)/core/memory/riscv_memmisaligned.sv						\
-	    $(RVL_SRC_DIR)/core/memory/riscv_membuf.sv							\
-	    $(RVL_SRC_DIR)/core/memory/riscv_pmachk.sv							\
-	    $(RVL_SRC_DIR)/core/memory/riscv_pmpchk.sv							\
-	    $(RVL_SRC_DIR)/core/memory/riscv_imem_ctrl.sv						\
-	    $(RVL_SRC_DIR)/core/memory/riscv_dmem_ctrl.sv						\
-	    $(RVL_SRC_DIR)/core/mmu/riscv_nommu.sv							\
-	    $(SUBMODULES_DIR)/$(busif)_pkg/rtl/verilog/$(busif)_pkg.sv					\
-	    $(RVL_SRC_DIR)/$(busif)/biu_$(busif).sv							\
-	    $(RVL_SRC_DIR)/$(busif)/riscv_top_$(busif).sv	
+	    $(RV_SRC_DIR)/pkg/riscv_cache_pkg.sv							\
+	    $(RV_SRC_DIR)/core/cache/riscv_cache_setup.sv						\
+	    $(RV_SRC_DIR)/core/cache/riscv_cache_tag.sv							\
+	    $(RV_SRC_DIR)/core/cache/riscv_cache_memory.sv						\
+	    $(RV_SRC_DIR)/core/cache/riscv_icache_fsm.sv						\
+	    $(RV_SRC_DIR)/core/cache/riscv_icache_core.sv						\
+	    $(RV_SRC_DIR)/core/cache/riscv_noicache_core.sv						\
+	    $(RV_SRC_DIR)/core/cache/riscv_dcache_fsm.sv						\
+	    $(RV_SRC_DIR)/core/cache/riscv_dcache_core.sv						\
+	    $(RV_SRC_DIR)/core/cache/riscv_nodcache_core.sv						\
+	    $(RV_SRC_DIR)/core/cache/riscv_cache_biu_ctrl.sv						\
+	    $(RV_SRC_DIR)/core/memory/riscv_memmisaligned.sv						\
+	    $(RV_SRC_DIR)/core/memory/riscv_membuf.sv							\
+	    $(RV_SRC_DIR)/core/memory/riscv_pmachk.sv							\
+	    $(RV_SRC_DIR)/core/memory/riscv_pmpchk.sv							\
+	    $(RV_SRC_DIR)/core/memory/riscv_imem_ctrl.sv						\
+	    $(RV_SRC_DIR)/core/memory/riscv_dmem_ctrl.sv						\
+	    $(RV_SRC_DIR)/core/mmu/riscv_nommu.sv							\
+	    $(RV_SRC_DIR)/$(busif)/biu_$(busif).sv							\
+	    $(RV_SRC_DIR)/$(busif)/riscv_top_$(busif).sv
 
 RTL_VLOG += $(JTAG_SRC_DIR)/altera_virtual_tap.sv							\
 	    $(JTAG_SRC_DIR)/roalogic_tap.sv								\
@@ -183,28 +180,9 @@ RTL_VLOG += $(SUBMODULES_DIR)/ahb3lite_interconnect/rtl/verilog/ahb3lite_interco
 
 
 RTL_VLOG += $(SYS_SRC_DIR)/common/riscv_system_top_ahb3lite.sv						\
-	    $(SYS_SRC_DIR)/pads.v									\
             $(SYS_SRC_DIR)/common/rv_soc_apb_8b_slaves.sv						\
 	    $(SYS_SRC_DIR)/common/rv_soc_apb_32b_slaves.sv						\
             $(SYS_SRC_DIR)/common/rv_soc_top.sv								\
-	    												\
-	    $(LATTICE_DIR)/ip/uart0/1.1.1/rtl/uart0_rl.v						\
-	    $(LATTICE_DIR)/ip/clkdiv/clkdiv.v								\
-	    $(LATTICE_DIR)/ip/dp_ram/dp_ram.v								\
-	    $(LATTICE_DIR)/ip/flash_ctrl/spi_flash_intf.v						\
-	    $(LATTICE_DIR)/ip/flash_ctrl/apb_intf.v							\
-	    $(LATTICE_DIR)/ip/flash_ctrl/ahb_intf.v							\
-	    $(LATTICE_DIR)/ip/flash_ctrl/lscc_spi_flash.v						\
-	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/sdr_sig.v			\
-	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/sdr_fifo_intf.v		\
-	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/sdr_data.v			\
-	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/sdr_ctrl.v			\
-	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/wb_fifo_intf.v		\
-	    $(LATTICE_DIR)/ip/sph_sdram_controller/wb_sdr_ctrl/rtl/verilog/wb_sdr_ctrl.v		\
-	    $(LATTICE_DIR)/ip/sph_sdram_controller/ahb2wb_sdr_ctrl/rtl/verilog/ahb2wb_sdr_ctrl.sv	\
-	    $(LATTICE_DIR)/ip/sph_sdram_controller/ip/pll_danfoss.v					\
-	    $(LATTICE_DIR)/ip/sph_sdram_controller/danfoss/ahb_sdr_ctl_top_rl.sv			\
-            $(LATTICE_DIR)/ecp5versa_top.sv
 
 RTL_VHDL =
 
