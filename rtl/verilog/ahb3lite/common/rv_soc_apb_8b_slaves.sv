@@ -142,16 +142,20 @@ module rv_soc_apb_8b_slaves #(
   //
   // Constants
   //
+
+  //amount of maximum instances (per slave type)
   localparam MAX_GPIO      = 32,
              MAX_UART      = 32,
              MAX_I2C       = 32,
              MAX_SPI       = 32;
 
+  //address space per slave type
   localparam GPIO_BYTES    = 16, //16bytes
-             UART_BYTES    = 16, //16bytes (should be 8!)
+             UART_BYTES    =  8, // 8bytes
              I2C_BYTES     = 16, //16bytes
              SPI_BYTES     = 16; //16bytes
 
+  //offset per slave type
   localparam GPIO_BASE     = 0,
              UART_BASE     = GPIO_BASE + MAX_GPIO * GPIO_BYTES,
              I2C_BASE      = UART_BASE + MAX_UART * UART_BYTES,
@@ -176,8 +180,8 @@ module rv_soc_apb_8b_slaves #(
 	     USR_SLV_OFFS  = SPI_SLV_OFFS  + MAX_SPI ;
 
 
-  //UART Clock divider
-  localparam UART_CLK_DIVISOR = (SYS_CLK_FREQ * 1000_000) / UART_BAUDRATE;
+  //UART16550 Clock divider
+  localparam UART16550_DL = (SYS_CLK_FREQ * 1000_000) / (16*UART_BAUDRATE);
 
 
   ////////////////////////////////////////////////////////////////
@@ -202,51 +206,43 @@ module rv_soc_apb_8b_slaves #(
   /*
    * Hookup ABP Decoder
    */
-
-  //assign GPIO base address locations
   always_comb
-    for (int n=0; n < MAX_GPIO; n++)
-    begin
-        slv_addr[GPIO_SLV_OFFS +n] =  GPIO_BASE + n*GPIO_BYTES;
-        slv_mask[GPIO_SLV_OFFS +n] = ~{$clog2(GPIO_BYTES){1'b1}};
-    end
+  begin
+      //assign GPIO base address locations
+      for (int n=0; n < MAX_GPIO; n++)
+      begin
+          slv_addr[GPIO_SLV_OFFS +n] =  GPIO_BASE + n*GPIO_BYTES;
+          slv_mask[GPIO_SLV_OFFS +n] = ~{$clog2(GPIO_BYTES){1'b1}};
+      end
 
+      //assign UART base address locations
+      for (int n=0; n < MAX_UART; n++)
+      begin
+          slv_addr[UART_SLV_OFFS +n] =  UART_BASE + n*UART_BYTES;
+          slv_mask[UART_SLV_OFFS +n] = ~{$clog2(UART_BYTES){1'b1}};
+      end
 
-  //assign UART base address locations
-  always_comb
-    for (int n=0; n < MAX_UART; n++)
-    begin
-        slv_addr[UART_SLV_OFFS +n] =  UART_BASE + n*UART_BYTES;
-        slv_mask[UART_SLV_OFFS +n] = ~{$clog2(UART_BYTES){1'b1}};
-    end
+      //assign I2C base address locations
+      for (int n=0; n < MAX_I2C; n++)
+      begin
+          slv_addr[I2C_SLV_OFFS +n] =  I2C_BASE + n*I2C_BYTES;
+          slv_mask[I2C_SLV_OFFS +n] = ~{$clog2(I2C_BYTES){1'b1}};
+      end
 
+      //assign SPI base address locations
+      for (int n=0; n < MAX_SPI; n++)
+      begin
+          slv_addr[SPI_SLV_OFFS +n] =  SPI_BASE + n*SPI_BYTES;
+          slv_mask[SPI_SLV_OFFS +n] = ~{$clog2(SPI_BYTES){1'b1}};
+      end
 
-  //assign I2C base address locations
-  always_comb
-    for (int n=0; n < MAX_I2C; n++)
-    begin
-        slv_addr[I2C_SLV_OFFS +n] =  I2C_BASE + n*I2C_BYTES;
-        slv_mask[I2C_SLV_OFFS +n] = ~{$clog2(I2C_BYTES){1'b1}};
-    end
-
-
-  //assign SPI base address locations
-  always_comb
-    for (int n=0; n < MAX_SPI; n++)
-    begin
-        slv_addr[SPI_SLV_OFFS +n] =  SPI_BASE + n*SPI_BYTES;
-        slv_mask[SPI_SLV_OFFS +n] = ~{$clog2(SPI_BYTES){1'b1}};
-    end
-
-
-  //assign USR base address locations
-  always_comb
-    for (int n=0; n < USR_CNT; n++)
-    begin
-        slv_addr[USR_SLV_OFFS +n] =  USR_BASE + n*USR_BYTES;
-        slv_mask[USR_SLV_OFFS +n] = ~{$clog2(USR_BYTES){1'b1}};
-    end
-
+      //assign USR base address locations
+      for (int n=0; n < USR_CNT; n++)
+      begin
+          slv_addr[USR_SLV_OFFS +n] =  USR_BASE + n*USR_BYTES;
+          slv_mask[USR_SLV_OFFS +n] = ~{$clog2(USR_BYTES){1'b1}};
+      end
+  end
 
 
   //Actual bus mux/decoder
@@ -333,26 +329,41 @@ generate
     end
     else if (n < UART_CNT)
     begin : gen_uart
-        //Provided by Lattice (ugh)
-        uart0 #(
-          .SYS_CLOCK_FREQ ( SYS_CLK_FREQ                ),
-          .CLK_DIVISOR    ( UART_CLK_DIVISOR            ),
-          .BAUD_RATE      ( UART_BAUDRATE               ) )
+        apb_uart16550 #(
+          .FIFO_DEPTH      ( 16                      ),
+          .DL_RESET_VALUE  ( UART16550_DL            ),
+          .WLS_RESET_VALUE ( 2'b11                   ),   //8bits
+          .STB_RESET_VALUE ( 1'b0                    ),   //1stop bit
+          .PEN_RESET_VALUE ( 1'b0                    ) )  //no parity
         uart_inst (
-         .rst_n_i       ( PRESETn                       ),
-         .clk_i         ( PCLK                          ),
-         .apb_psel_i    ( SLV_PSEL   [UART_SLV_OFFS +n] ),
-         .apb_penable_i ( PENABLE                       ),
-         .apb_paddr_i   ( PADDR      [             3:0] ),
-         .apb_pwrite_i  ( PWRITE                        ),
-         .apb_pwdata_i  ( PWDATA                        ),
-         .apb_prdata_o  ( SLV_PRDATA [UART_SLV_OFFS +n] ),
-         .apb_pready_o  ( SLV_PREADY [UART_SLV_OFFS +n] ),
-         .apb_pslverr_o ( SLV_PSLVERR[UART_SLV_OFFS +n] ),
+         .PRESETn    ( PRESETn                       ),
+         .PCLK       ( PCLK                          ),
+         .PSEL       ( SLV_PSEL   [UART_SLV_OFFS +n] ),
+         .PENABLE    ( PENABLE                       ),
+         .PADDR      ( PADDR      [             2:0] ),
+         .PWRITE     ( PWRITE                        ),
+         .PWDATA     ( PWDATA                        ),
+         .PRDATA     ( SLV_PRDATA [UART_SLV_OFFS +n] ),
+         .PREADY     ( SLV_PREADY [UART_SLV_OFFS +n] ),
+         .PSLVERR    ( SLV_PSLVERR[UART_SLV_OFFS +n] ),
 
-         .txd_o         ( uart_txd_o [               n] ),
-         .rxd_i         ( uart_rxd_i [               n] ),
-         .int_o         ( uart_int_o [               n] ) );
+         .sout_o     ( uart_txd_o [               n] ),
+         .sin_i      ( uart_rxd_i [               n] ),
+	 .rts_no     (),
+	 .dtr_no     (),
+	 .dsr_ni     (),
+	 .dcd_ni     (),
+	 .cts_ni     (),
+	 .ri_ni      (),
+
+	 .out1_no    (),
+	 .out2_no    (),
+
+	 .baudout_no (),
+
+	 .txrdy_no   (),
+	 .rxrdy_no   (),
+         .intr_o     ( uart_int_o [               n] ) );
     end
     else
     begin : gen_uart_error
