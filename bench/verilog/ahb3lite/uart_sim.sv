@@ -96,14 +96,19 @@ always @(posedge clk)
   begin
       rx_reg          <= rx_i;
       rx_reg_dly      <= rx_reg;
-      rx_falling_edge <= ~rx_reg & rx_reg_dly;
  end
 
 
+assign rx_falling_edge = ~rx_reg & rx_reg_dly;
+
+
 /*bit count-enable
+* Start bit we only count half, such that end of START is in the middle of the Rx bit
+* Consecutive data bits are in the middle of the Rx bit then as well
 */
 always @(posedge clk)
-  if (clk_cnt_clr || clk_cnt_done) clk_cnt <= LOCAL_CLK * 1000000 / DATARATE;
+  if      (clk_cnt_clr ) clk_cnt <= (LOCAL_CLK * 1000_000 / (DATARATE*2)) -1;
+  else if (clk_cnt_done) clk_cnt <= (LOCAL_CLK * 1000_000 /  DATARATE   ) -1;
   else                             clk_cnt <= clk_cnt -1;
 
 assign clk_cnt_done = ~|clk_cnt;
@@ -112,13 +117,13 @@ assign clk_cnt_done = ~|clk_cnt;
 /*Data shift register
 */
 always @(posedge clk)
-  if (clk_cnt_done) bit_sr <= {rx_i, bit_sr[7:1]};
+  if (clk_cnt_done) bit_sr <= {rx_reg, bit_sr[7:1]};
 
 
 /*Data counter
 */
 always @(posedge clk)
-  if      (bit_cnt_clr ) bit_cnt <= DATABITS;
+  if      (bit_cnt_clr ) bit_cnt <= DATABITS; //the first bit we latch is the start bit. Thus count to DATABITS+1
   else if (clk_cnt_done) bit_cnt <= bit_cnt -1;
 
 assign bit_cnt_done = ~|bit_cnt;
@@ -139,7 +144,7 @@ always @(posedge clk)
                   begin
                       fsm_state   <= START;
                       clk_cnt_clr <= 1'b1;
-                      bit_cnt_clr <= 1'b1;
+//                      bit_cnt_clr <= 1'b1;
                   end
 
          //wait for start bit to complete
@@ -149,19 +154,25 @@ always @(posedge clk)
                       bit_cnt_clr <= 1'b1;
                   end
 
-         //Shit in data
+         //Shift in data
          DATA  : if (bit_cnt_done)
                  begin
-                     fsm_state <= PARITYBIT == "NONE" ? IDLE : PARITY;
-                     latch_rx  <= bit_sr;
-                     $fwrite(fd, "%0c",bit_sr); $fflush(fd);
+                     fsm_state   <= PARITYBIT == "NONE" ? STOP : PARITY;
+                     latch_rx    <= bit_sr;
                  end
 
          //Parity Bit
          PARITY: if (clk_cnt_done)
                  begin
-                     fsm_state <= IDLE;
+                     fsm_state <= STOP;
                  end
+
+         //Stop Bit
+         STOP  : begin
+                     fsm_state <= IDLE;
+                     $fwrite(fd, "%0c",latch_rx); $fflush(fd);
+                 end
+
       endcase
   end
 
