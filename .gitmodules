@@ -40,3 +40,6 @@
 [submodule "submodules/apb_error"]
 	path = submodules/apb_error
 	url = https://github.com/RoaLogic/apb_error.git
+[submodule "submodules/apb4_uart16550"]
+	path = submodules/apb4_uart16550
+	url = https://github.com/RoaLogic/apb4_uart16550.git
