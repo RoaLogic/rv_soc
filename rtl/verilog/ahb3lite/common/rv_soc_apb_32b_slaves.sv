@@ -169,20 +169,20 @@ module rv_soc_apb_32b_slaves #(
   /*
    * Hookup ABP Decoder
    */
-
-  //PLIC
-  assign slv_addr[PLIC_SLV_OFFS] =  PLIC_BASE;
-  assign slv_mask[PLIC_SLV_OFFS] = ~{$clog2(PLIC_BYTES){1'b1}};
+  always_comb
+  begin
+      //PLIC
+      slv_addr[PLIC_SLV_OFFS] =  PLIC_BASE;
+      slv_mask[PLIC_SLV_OFFS] = ~{$clog2(PLIC_BYTES){1'b1}};
  
   
-  //USR APB
-  always_comb
-    for (int n=0; n < MAX_USR; n++)
-    begin
-        slv_addr[USR_SLV_OFFS +n] = USR_BASE + n*USR_BYTES;
-        slv_mask[USR_SLV_OFFS +n] = ~{$clog2(USR_BYTES){1'b1}};
-    end
-
+      //USR APB
+      for (int n=0; n < MAX_USR; n++)
+      begin
+          slv_addr[USR_SLV_OFFS +n] = USR_BASE + n*USR_BYTES;
+          slv_mask[USR_SLV_OFFS +n] = ~{$clog2(USR_BYTES){1'b1}};
+      end
+  end
 
 
   //Actual bus mux/decoder
@@ -244,28 +244,25 @@ module rv_soc_apb_32b_slaves #(
     .irq               ( plic_int_o                   ) );
 
   //Assign interrupts
-  assign plic_src[PLIC_SRC_JSP] = int_jsp_i;
-
   always_comb
-    for (int n=0; n < UART_CNT; n++)
-      plic_src[PLIC_SRC_UART +n] = int_uart_i[n];
+  begin
+      plic_src[PLIC_SRC_JSP] = int_jsp_i;
 
-  always_comb
-    for (int n=0; n < GPIO_CNT; n++)
-      plic_src[PLIC_SRC_GPIO +n] = int_gpio_i[n];
+      for (int n=0; n < UART_CNT; n++)
+        plic_src[PLIC_SRC_UART +n] = int_uart_i[n];
 
-  always_comb
-    for (int n=0; n < I2C_CNT; n++)
-      plic_src[PLIC_SRC_I2C +n] = int_i2c_i[n];
+      for (int n=0; n < GPIO_CNT; n++)
+        plic_src[PLIC_SRC_GPIO +n] = int_gpio_i[n];
 
-  always_comb
-    for (int n=0; n < SPI_CNT; n++)
-      plic_src[PLIC_SRC_SPI +n] = int_spi_i[n];
+      for (int n=0; n < I2C_CNT; n++)
+        plic_src[PLIC_SRC_I2C +n] = int_i2c_i[n];
 
-  always_comb
-    for (int n=0; n < USR_INT_CNT; n++)
-      plic_src[PLIC_SRC_USR +n] = int_usr_i[n];
+      for (int n=0; n < SPI_CNT; n++)
+        plic_src[PLIC_SRC_SPI +n] = int_spi_i[n];
 
+      for (int n=0; n < USR_INT_CNT; n++)
+        plic_src[PLIC_SRC_USR +n] = int_usr_i[n];
+  end
 
 generate
   genvar n;
