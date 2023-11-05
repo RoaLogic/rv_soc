@@ -175,6 +175,12 @@ RTL_VLOG += $(SUBMODULES_DIR)/ahb3lite_interconnect/rtl/verilog/ahb3lite_interco
 	    $(SUBMODULES_DIR)/apb4_mux/rtl/verilog/apb_mux.sv						\
 	    $(SUBMODULES_DIR)/ahb3lite_memory/rtl/verilog/ahb3lite_sram1rw.sv				\
 	    $(SUBMODULES_DIR)/apb4_gpio/rtl/verilog/apb_gpio.sv						\
+	    $(SUBMODULES_DIR)/apb4_uart16550/rtl/verilog/uart16550_pkg.sv				\
+	    $(SUBMODULES_DIR)/apb4_uart16550/rtl/verilog/uart16550_rx.sv				\
+	    $(SUBMODULES_DIR)/apb4_uart16550/rtl/verilog/uart16550_tx.sv				\
+	    $(SUBMODULES_DIR)/apb4_uart16550/rtl/verilog/uart16550_regs.sv				\
+	    $(SUBMODULES_DIR)/apb4_uart16550/rtl/verilog/uart16550_fifo.sv				\
+	    $(SUBMODULES_DIR)/apb4_uart16550/rtl/verilog/apb_uart16550.sv				\
 	    $(SUBMODULES_DIR)/ahb3lite_error/rtl/verilog/ahb3lite_error.sv				\
 	    $(SUBMODULES_DIR)/apb_error/rtl/verilog/apb_error.sv
 
@@ -191,24 +197,21 @@ RTL_VHDL =
 #####################################################################
 IMPL_DIR = $(ROOT_DIR)/syn/lattice/impl1
 
-GATE_VLOG = $(IMPL_DIR)/rvl_soc_ecp5_impl1_vo.vo
-GATE_SDF  = $(IMPL_DIR)/rvl_soc_ecp5_impl1_vo.sdf
 
 
 #####################################################################
 # Testbench Sources
 #####################################################################
 TB_PREREQ=
-TB_TOP=rvl_soc_tb
+TB_TOP=rv_soc_tb
 TB_SRC_DIR=$(ROOT_DIR)/bench/verilog/$(busif)
-TB_VLOG=$(TB_SRC_DIR)/rvl_soc_tb.sv						\
-	$(TB_SRC_DIR)/ecp5versa_tb.sv						\
+TB_VLOG=$(TB_SRC_DIR)/rv_soc_tb.sv						\
 	$(TB_SRC_DIR)/uart_sim.sv						\
 	$(TB_SRC_DIR)/freertos_task_mon.sv					\
 	$(TB_SRC_DIR)/models/IS42VM32200M_Rev0_2.v				\
 	$(TB_SRC_DIR)/check_cpu2ahb.sv						\
 	$(TB_SRC_DIR)/check_ahb2apb.sv						\
-	$(SUBMODULES_DIR)/rvl/bench/verilog/ahb3lite/memory_model_ahb3lite.sv
+	$(SUBMODULES_DIR)/rv12/bench/verilog/ahb3lite/memory_model_ahb3lite.sv
 TB_VHDL=
 
 
