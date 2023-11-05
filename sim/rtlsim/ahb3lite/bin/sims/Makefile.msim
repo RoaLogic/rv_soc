@@ -64,7 +64,7 @@ simw: vlog $(PLI)
 	echo "--- Running sim"
 	vsim $(SIM_OPTS) $(PLI_OPTS)			\
 	 -l $(LOG) $(TOP) 				\
-	 +access +r -wlf $(LOG).wlf			\
+	 -voptargs=+acc +access +r -wlf $(LOG).wlf	\
 	 -do "set WildcardFilter [lsearch -not -all -inline $$WildcardFilter Memory];				\
 	 log -r -rec /$(TOP)/*; 										\
 	 log /$(TOP)/soc_top/cpu_subsys/riscv_top/core/int_rf/rf;						\
