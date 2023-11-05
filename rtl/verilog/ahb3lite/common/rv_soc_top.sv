@@ -744,33 +744,34 @@ import riscv_state_pkg::*;
    * Instantiate AHB Switch
    *
    */
-  assign mstpriority[CPU_INS    ] = CPU_INS_PRIORITY;
-  assign mstpriority[CPU_DAT    ] = CPU_DAT_PRIORITY;
-  assign mstpriority[CPU_DBG    ] = CPU_DBG_PRIORITY;
-
-
-  assign slv_adrbase[BOOTROM    ] = BOOTROM_BASE;
-  assign slv_adrmask[BOOTROM    ] = BOOTROM_MASK;
-  assign slv_adrbase[RAM        ] = RAM_BASE;
-  assign slv_adrmask[RAM        ] = RAM_MASK;
-  assign slv_adrbase[TIMER      ] = TIMER_BASE;
-  assign slv_adrmask[TIMER      ] = TIMER_MASK;
-  //
-  assign slv_adrbase[AHB2APB_32b] = AHB2APB_32b_BASE;
-  assign slv_adrmask[AHB2APB_32b] = AHB2APB_32b_MASK;
-  assign slv_adrbase[AHB2APB_8b ] = AHB2APB_8b_BASE;
-  assign slv_adrmask[AHB2APB_8b ] = AHB2APB_8b_MASK;
-  assign slv_adrbase[DRAM       ] = DRAM_BASE;
-  assign slv_adrmask[DRAM       ] = DRAM_MASK;
-  assign slv_adrbase[EXTAHB     ] = EXTAHB_BASE;
-  assign slv_adrmask[EXTAHB     ] = EXTAHB_MASK;
-
   always_comb
-    for (int n=0; n < MAX_USR_SAHB; n++)
-    begin
-        slv_adrbase[USRAHB +n] = USRAHB_BASE + n*USRAHB_BYTES;
-        slv_adrmask[USRAHB +n] = USRAHB_MASK;
-    end
+  begin
+      mstpriority[CPU_INS    ] = CPU_INS_PRIORITY;
+      mstpriority[CPU_DAT    ] = CPU_DAT_PRIORITY;
+      mstpriority[CPU_DBG    ] = CPU_DBG_PRIORITY;
+
+      slv_adrbase[BOOTROM    ] = BOOTROM_BASE;
+      slv_adrmask[BOOTROM    ] = BOOTROM_MASK;
+      slv_adrbase[RAM        ] = RAM_BASE;
+      slv_adrmask[RAM        ] = RAM_MASK;
+      slv_adrbase[TIMER      ] = TIMER_BASE;
+      slv_adrmask[TIMER      ] = TIMER_MASK;
+
+      slv_adrbase[AHB2APB_32b] = AHB2APB_32b_BASE;
+      slv_adrmask[AHB2APB_32b] = AHB2APB_32b_MASK;
+      slv_adrbase[AHB2APB_8b ] = AHB2APB_8b_BASE;
+      slv_adrmask[AHB2APB_8b ] = AHB2APB_8b_MASK;
+      slv_adrbase[DRAM       ] = DRAM_BASE;
+      slv_adrmask[DRAM       ] = DRAM_MASK;
+      slv_adrbase[EXTAHB     ] = EXTAHB_BASE;
+      slv_adrmask[EXTAHB     ] = EXTAHB_MASK;
+
+     for (int n=0; n < MAX_USR_SAHB; n++)
+     begin
+         slv_adrbase[USRAHB +n] = USRAHB_BASE + n*USRAHB_BYTES;
+         slv_adrmask[USRAHB +n] = USRAHB_MASK;
+     end
+  end
 
 
   ahb3lite_interconnect #(
