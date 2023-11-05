@@ -74,7 +74,7 @@ module rv_soc_tb;
   parameter CORES              = 1;
 
 
-  parameter BAUD_RATE          = 460800; //2457600; //9600;
+  parameter BAUD_RATE          = 97656; //2457600; //9600;
 
 
 
@@ -781,7 +781,7 @@ endgenerate
    * Generate Clocks
    */
   always #10 clk_ahb = ~clk_ahb; //50MHz AHB clk
-  always #40 clk_apb = ~clk_apb; //12.5Hz APB clk
+  always #40 clk_apb = ~clk_apb; //12.5MHz APB clk
 
   /*
    * Generate Resets
@@ -849,7 +849,7 @@ endgenerate
       jtag_tck   = 1'b0;
       jtag_tms   = 1'b0;
       jtag_tdi   = 1'b0;
-      jtag_tdo   = 1'b0;
+//      jtag_tdo   = 1'b0;
 
       clk_ahb    = 1'b0;
       clk_apb    = 1'b0;
