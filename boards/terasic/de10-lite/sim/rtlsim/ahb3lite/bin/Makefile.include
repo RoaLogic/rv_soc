@@ -1,0 +1,170 @@
+#####################################################################
+##   ,------.                    ,--.                ,--.          ##
+##   |  .--. ' ,---.  ,--,--.    |  |    ,---. ,---. `--' ,---.    ##
+##   |  '--'.'| .-. |' ,-.  |    |  |   | .-. | .-. |,--.| .--'    ##
+##   |  |\  \ ' '-' '\ '-'  |    |  '--.' '-' ' '-' ||  |\ `--.    ##
+##   `--' '--' `---'  `--`--'    `-----' `---' `-   /`--' `---'    ##
+##                                             `---'               ##
+##   Roa Logic RV-SoC                                              ##
+##   Simulator Include File                                        ##
+##                                                                 ##
+#####################################################################
+##                                                                 ##
+##             Copyright (C) 2016-2022 ROA Logic BV                ##
+##             www.roalogic.com                                    ##
+##                                                                 ##
+##   This source file may be used and distributed without          ##
+##   restriction provided that this copyright statement is not     ##
+##   removed from the file and that any derivative work contains   ##
+##   the original copyright notice and the associated disclaimer.  ##
+##                                                                 ##
+##      THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY        ##
+##   EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED     ##
+##   TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS     ##
+##   FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL THE AUTHOR OR     ##
+##   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  ##
+##   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  ##
+##   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  ##
+##   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)      ##
+##   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN     ##
+##   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  ##
+##   OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS          ##
+##   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  ##
+##                                                                 ##
+#####################################################################
+
+#####################################################################
+# Implementation details
+#####################################################################
+TARGET     =
+busif      = ahb3lite
+
+#User VPI or file based JTAG model or OPENOCD VPI (OPENOCD)
+#JTAG_DBG = OPENOCD
+#JTAG_DBG = VPI
+JTAG_DBG = NONE
+
+
+#####################################################################
+# OVL checker
+# This can be changed on the command line
+#####################################################################
+OVL_ASSERT   = OFF
+OVL_INIT_MSG = ON
+STD_OVL_DIR  = /projects/OVL/std_ovl
+
+
+#####################################################################
+# Design constants
+#####################################################################
+INCDIRS:=
+DEFINES:=SIM
+#DEFINES+=USE_SDRAM_CONTROLLER
+#DEFINES+=RV_NO_X_ON_LOAD
+
+ifneq (,$(findstring USE_SDRAM_CONTROLLER, $(DEFINES)))
+  #Verilog Format
+  HEX_SUFFIX:=hex.ver
+else
+  #Intel HEX Format
+  HEX_SUFFIX:=hex
+endif
+
+
+#####################################################################
+# Functions
+#####################################################################
+
+# $(call file-exists, file)
+file_exists = $(if $(wildcard $1),$(or $(info Reading $1),1),$(error File not found $1))
+
+# $(call load_filelist, filelist)
+load_filelist = $(if $(call file_exists, $1), $(addprefix $(dir $1), $(file < $1)))
+
+
+#####################################################################
+# Design Sources
+#####################################################################
+SUBMODULES_DIR= $(ROOT_DIR)/submodules
+MEM_SRC_DIR   = $(SUBMODULES_DIR)/memory/rtl/verilog
+SYS_SRC_DIR   = $(ROOT_DIR)/rtl/verilog/$(busif)
+
+DUT_SRC_DIR=$(ROOT_DIR)/rtl/verilog
+RTL_TOP   = rv_soc_top
+
+RTL_VLOG  = $(SUBMODULES_DIR)/$(busif)_pkg/rtl/verilog/$(busif)_pkg.sv
+
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/rv12/rtl/filelist_$(busif).f)
+
+RTL_VLOG += $(MEM_SRC_DIR)/rl_ram_1r1w.sv                                                               \
+            $(MEM_SRC_DIR)/rl_ram_1r1w_generic.sv                                                       \
+	    $(MEM_SRC_DIR)/rl_ram_1r1w_altera.sv							\
+            $(MEM_SRC_DIR)/rl_ram_1rw.sv                                                                \
+            $(MEM_SRC_DIR)/rl_ram_1rw_generic.sv                                                        \
+            $(MEM_SRC_DIR)/rl_queue.sv									\
+	    $(MEM_SRC_DIR)/rl_scfifo.sv
+
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/universal_jtag_tap/rtl/filelist.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/adv_dbg_if/rtl/filelist_$(busif).f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/$(busif)_interconnect/rtl/filelist.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/$(busif)_sdram_ctrl/rtl/filelist_$(busif).f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/plic/rtl/filelist_apb4.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/$(busif)_timer/rtl/filelist.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/$(busif)_apb_bridge/rtl/filelist.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/apb4_mux/rtl/filelist.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/$(busif)_memory/rtl/filelist.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/apb4_gpio/rtl/filelist.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/apb4_uart16550/rtl/filelist.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/$(busif)_error/rtl/filelist.f)
+RTL_VLOG += $(call load_filelist, $(SUBMODULES_DIR)/apb_error/rtl/filelist.f)
+
+RTL_VLOG += $(SYS_SRC_DIR)/common/riscv_system_top_$(busif).sv						\
+            $(SYS_SRC_DIR)/common/rv_soc_apb_8b_slaves.sv						\
+	    $(SYS_SRC_DIR)/common/rv_soc_apb_32b_slaves.sv						\
+            $(SYS_SRC_DIR)/common/rv_soc_top.sv								\
+
+RTL_VLOG += $(call load_filelist, $(BOARD_DIR)/rtl/filelist.f)
+
+RTL_VHDL =
+
+
+#####################################################################
+# GateLevel Sources
+#####################################################################
+IMPL_DIR = $(BOARD_DIR)/syn
+
+
+
+#####################################################################
+# Testbench Sources
+#####################################################################
+TB_PREREQ=
+TB_TOP=de10_lite_tb
+TB_SRC_DIR=$(BOARD_DIR)/bench/verilog/$(busif)
+TB_VLOG=$(TB_SRC_DIR)/de10_lite_tb.sv						\
+	$(TB_SRC_DIR)/uart_sim.sv						\
+	$(TB_SRC_DIR)/models/IS42VM32200M_Rev0_2.v				\
+	$(SUBMODULES_DIR)/rv12/bench/verilog/ahb3lite/memory_model_ahb3lite.sv
+TB_VHDL=
+
+
+#####################################################################
+# Technology Libraries
+#####################################################################
+LIBEXT = .v
+
+ifeq ($(JTAG_DBG), VPI)
+  TB_PLI = ../$(TB_SRC_DIR)/jtag_pli/jp-io-vpi.sl
+  TB_VLOG += $(TB_SRC_DIR)/jtag_pli/dbg_comm_vpi.v
+else ifeq ($(JTAG_DBG), OPENOCD)
+  TB_PLI = ../$(TB_SRC_DIR)/jtag_openocd/jtag_vpi.sl
+  TB_VLOG += $(TB_SRC_DIR)/jtag_openocd/jtag_vpi.v
+else ifeq ($(JTAG_DBG), COMM)
+  TB_VLOG += $(TB_SRC_DIR)/jtag_pli/dbg_comm.v
+endif
+
+
+#Altera models (altsyncram, pll, etc)
+TECHLIBS = $(shell which vsim | sed -r 's/(.*)\/questa.*/\1\/quartus\/eda\/sim_lib/')
+
+TECHLIBS = ~/Tools/intelFPGA_lite/22.1std/quartus/eda/sim_lib
