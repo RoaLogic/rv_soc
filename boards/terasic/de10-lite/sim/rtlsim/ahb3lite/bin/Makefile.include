@@ -166,5 +166,3 @@ endif
 
 #Altera models (altsyncram, pll, etc)
 TECHLIBS = $(shell which vsim | sed -r 's/(.*)\/questa.*/\1\/quartus\/eda\/sim_lib/')
-
-TECHLIBS = ~/Tools/intelFPGA_lite/22.1std/quartus/eda/sim_lib
