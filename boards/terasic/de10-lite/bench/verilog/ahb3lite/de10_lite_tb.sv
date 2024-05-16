@@ -364,9 +364,11 @@ endgenerate
   initial
   begin
 	  #55;
-	  port_key[0] = 1'b0;
+	  port_key[0] = 1'b1;
 	  #55;
-	  port_key[1] = 1'b1;
+	  port_key[0] = 1'b0;
+          #55;
+          port_key[0] = 1'b1;
   end
 
 
