@@ -1,0 +1,48 @@
+SRC_DIR = ./src
+ROOT_DIR = ../../../../../
+
+RISCV_MODEL = -march=rv32imc -mabi=ilp32 
+#_zicsr_zifencei 
+RISCV_CODE_MODEL = -mcmodel=medany
+
+APPLICATION_DIR = $(SRC_DIR)
+SDRAM_DIR = $(ROOT_DIR)/submodules/ahb3lite_sdram_ctrl/fw
+
+LINKER = $(SRC_DIR)/boot-linker.ld
+
+HEX2VERILOG_DATA_SIZE = 32
+HEX2VERILOG_OFFSET = 1048576
+
+##########################################################################
+#
+# Compiler flags
+#
+##########################################################################
+
+OPTIMIZATIONS = -O0
+DEBUG_INFORMATION = -g3
+
+##########################################################################
+#
+# Header and source paths
+#
+##########################################################################
+
+INC =   $(APPLICATION_DIR)/ \
+        $(SDRAM_DIR)/
+
+SRC =   $(APPLICATION_DIR)/main.c \
+        $(APPLICATION_DIR)/crt0.S \
+        $(SDRAM_DIR)/HAL_SDRAM.c
+
+
+INC_PARAMS = $(addprefix -I,$(INC))
+
+##########################################################################
+#
+# Compiler addition
+#
+##########################################################################
+
+CFLAGS = $(RISCV_MODEL) $(RISCV_CODE_MODEL) $(INC_PARAMS) $(OPTIMIZATIONS) -fmessage-length=0 -ffunction-sections $(DEBUG_INFORMATION)
+LDFLAGS = $(RISCV_MODEL) $(INC_PARAMS) -nostartfiles

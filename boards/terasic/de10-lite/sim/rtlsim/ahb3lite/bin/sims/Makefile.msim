@@ -67,6 +67,7 @@ simw: vlog $(PLI)
 	 -voptargs=+acc +access +r -wlf $(LOG).wlf	\
 	 -do "set WildcardFilter [lsearch -not -all -inline $$WildcardFilter Memory];				\
 	 log -r -rec /$(TOP)/*; 										\
+     log /$(TOP)/soc_top/soc_top/cpu_subsys/riscv_top/core/int_rf/rf; \
 	 run -all; quit"				\
 	$(foreach p, $(PARAMS),-g`echo $p | sed -r 's/(\w+)=([^0-9].*)/\1="\2"/'`)
 

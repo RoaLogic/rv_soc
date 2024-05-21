@@ -1,0 +1,178 @@
+#!/usr/bin/perl
+
+# (C) 2017-2021 Richard Herveille, RoaLogic
+# richard.herveille@roalogic.com
+#
+# Converts Intel HEX file to verilog $readmemh compatible format
+# The output is [datasize] oriented. Datasize in bits
+# [address_offset] is removed from the output
+
+
+use Switch;
+
+#check if we got an argument
+if (!@ARGV) {
+  print "No file specified\n";
+  print "Usage: hex2verilog <input_intel_hex_file> [number_of_bits_per_word] [address_offset]\n";
+  print "For now ignores checksum!\n";
+  exit;
+}
+
+#Number of bits per word
+$bits_per_word = 8;
+if ($ARGV[1]) { $bits_per_word = $ARGV[1]};
+$bytes_per_word = $bits_per_word / 8;
+
+#Address offset
+$address_offset = 0;
+if ($ARGV[2]) { $address_offset = $ARGV[2]};
+
+#Big/Little endian
+$little_endian = 1;
+
+
+#open input file
+if (!open ifd, "< $ARGV[0]") {
+  print "Error cannot open '$ARGV[0]'\n";
+  exit -1;
+}
+
+#Memory Hash
+%mem = ();
+
+#go through file
+$lba = 0;
+$sba = 0;
+PROCESS_FILE: while (<ifd>) {
+   if (! /:             # start of record
+          ([0-9a-f]{2}) # record length
+          ([0-9a-f]{4}) # offset
+          ([0-9a-f]{2}) # type
+          ([0-9a-f]*  ) # data
+          ([0-9a-f]{2}) # checksum
+         /xi) {
+    print "Incorrect field. Not an Intel hex file?\n";
+  } else {
+    $l = $1;
+    $o = $2;
+    $t = $3;
+    $d = $4;
+    $c = $5;
+
+    #examine the record type
+    switch ($t) {
+      case "00" { #Data record
+                  my $drlo = hex($o) - $address_offset;
+                  my $index = 0;
+
+                  #store data in hash table
+                  while ($d) {
+                    #grab first byte (lowest address)
+                    my $byte = substr($d, 0, 2);
+
+                    #get next byte (shift out lowest byte)
+                    substr($d,0,2) = "";
+
+                    #calculate effective address
+                    if ($lba) { $address = ($lba +    $drlo + $index) % 2**32; }
+                    else      { $address = $sba + ( ($drlo + $index) % 2**16); }
+
+                    #store byte
+                    $mem{$address}=$byte;
+
+                    #next index
+                    $index++;
+                  }
+                }
+      case "01" { #End-of-File record
+                  last PROCESS_FILE;
+                }
+      case "02" { #extended segment address record
+                  #address = sba + ((DRLO + DRI) % 2^16)
+                  $sba = hex($d) * 16; #$d should be 4chars (2bytes)
+                  printf "sba = $sba\n";
+                }
+      case "03" { #start Segment Address
+                  print "Start Segment Address record ignored\n";
+                }
+      case "04" { #extended linear address record
+                  #address = ( (ulba << 16) + DRLO + DRI ) % 2^32
+                  $lba = hex($d) * 65536; #$d should be 8chars (4bytes)
+                  printf "lba = $lba\n";
+                }
+      case "05" { #Start linear code address ... 80386 only
+                  print "Start linear code address record ignored\n";
+                }
+      else      { print "Illegal record type ($t). Ignored ...\n"; }
+    }
+  }
+}
+
+#close input file
+close (ifd);
+
+
+#Create internal representation of memory
+%newmem=();
+
+#Address/Data pairs are stored in the hash table
+#  but the order is gobbled ... sort the keys (addresses) numerically
+sub by_number {$a <=> $b}
+foreach $address (sort by_number keys %mem) {
+  #get data associated with 'address'
+  #address is (already) a number, but data is a string
+
+  #handle odd addresses
+  if ( ($address % $bytes_per_word) != 0) {
+    #odd address
+    $address = int($address / $bytes_per_word) * $bytes_per_word;
+  }
+
+  $adr = $address;
+  $data = "";
+  for (my $n=0; $n < $bytes_per_word; $n++) {
+    #fill non-existing memory with zeros
+    if (!exists $mem{$adr}) {
+      $byte = "00";
+    } else {
+      $byte = $mem{$adr};
+    }
+
+    #handle endianess
+    if ($little_endian) {
+      $data = $byte . $data;
+    } else {
+      $data = $data . $byte;
+    }
+
+    #next addresss
+    $adr++;
+  }
+
+  #store in new hashtable. Handles duplicate addresses
+  #Not very sofisticated or fast, but simple
+  $newmem{$address} = $data;
+}
+
+
+#open output file
+if (!open ofd, "> $ARGV[0].ver") {
+  print "Error cannot open '$ARGV[0].ver'\n";
+  exit -1;
+}
+
+
+#write data to output file
+#Address/Data pairs are stored in the hash table
+#  but the order is gobbled ... sort the keys (addresses) numerically
+foreach $address (sort by_number keys %newmem) {
+  printf ofd "@%x\n",$address / $bytes_per_word;
+  print ofd "$newmem{$address}\n";
+}
+
+
+#close output file
+close (ofd);
+
+
+

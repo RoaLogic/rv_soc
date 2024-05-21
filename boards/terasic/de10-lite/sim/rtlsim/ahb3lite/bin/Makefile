@@ -45,7 +45,7 @@ MS     = -s
 
 BOARD_DIR  =../../../..
 ROOT_DIR   =$(BOARD_DIR)/../../..
-SW_SRC_DIR=../$(BOARD_DIR)/sw
+SW_SRC_DIR=../$(BOARD_DIR)/fw
 
 ##########################################################################
 #
@@ -127,7 +127,7 @@ endif
 		HAS_RVM=$(HAS_RVM)							\
 		HAS_RVC=$(HAS_RVC)							\
 		HAS_U=$(HAS_U) HAS_S=$(HAS_S) HAS_H=$(HAS_H)				\
-		BOOTROM_INIT_FILE=\"$(SW_SRC_DIR)/bootrom/Debug/bootrom.hex.ver\"	\
+		BOOTROM_INIT_FILE=\"$(SW_SRC_DIR)/bootrom/Debug/bin/bootrom.hex.ver\"	\
 		SDRAM_INIT_FILE=\"$(SW_SRC_DIR)/$*/Debug/$*.$(HEX_SUFFIX)\"		\
 		JTAG_SERVER_TYPE=\"$(JTAG_DBG)\" "
 
